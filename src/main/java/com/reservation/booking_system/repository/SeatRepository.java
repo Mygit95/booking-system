@@ -10,7 +10,8 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.UUID;
 
-public interface SeatRepository extends JpaRepository<Seat, UUID> {
+public interface SeatRepository
+        extends JpaRepository<Seat, UUID> {
 
     @Query("""
         SELECT s
@@ -33,5 +34,15 @@ public interface SeatRepository extends JpaRepository<Seat, UUID> {
     List<Seat> findSeatsForUpdate(
             @Param("showId") UUID showId,
             @Param("seatNumbers") List<String> seatNumbers
+    );
+
+    @Query("""
+        SELECT s
+        FROM Seat s
+        WHERE s.reservation.id = :reservationId
+        ORDER BY s.seatNumber ASC
+    """)
+    List<Seat> findByReservationId(
+            @Param("reservationId") UUID reservationId
     );
 }
