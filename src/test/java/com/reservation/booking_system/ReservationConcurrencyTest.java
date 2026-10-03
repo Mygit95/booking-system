@@ -143,7 +143,7 @@ class ReservationConcurrencyTest {
     void onlyOneUserCanReserveTheSameSeatConcurrently()
             throws Exception {
 
-        int numberOfRequests = 50;
+        int numberOfRequests = 100;
 
         ExecutorService executor =
                 Executors.newFixedThreadPool(numberOfRequests);
@@ -204,7 +204,7 @@ class ReservationConcurrencyTest {
         executor.shutdown();
 
         assertEquals(1, successfulRequests);
-        assertEquals(49, conflictRequests);
+        assertEquals(99, conflictRequests);
 
         List<Seat> seats =
                 seatRepository.findByShowIdOrderBySeatNumber(showId);
@@ -233,7 +233,7 @@ class ReservationConcurrencyTest {
     void sameIdempotencyKeyConcurrentlyCreatesOnlyOneReservation()
             throws Exception {
 
-        int numberOfRequests = 50;
+        int numberOfRequests = 100;
 
         ExecutorService executor =
                 Executors.newFixedThreadPool(numberOfRequests);
@@ -292,7 +292,7 @@ class ReservationConcurrencyTest {
 
         executor.shutdown();
 
-        assertEquals(50, successfulRequests);
+        assertEquals(100, successfulRequests);
         assertEquals(0, conflictRequests);
         assertEquals(0, errors);
 
@@ -323,7 +323,7 @@ class ReservationConcurrencyTest {
     void sameUserCannotExceedPerUserLimitConcurrently()
             throws Exception {
 
-        int numberOfRequests = 20;
+        int numberOfRequests = 100;
 
         ExecutorService executor =
                 Executors.newFixedThreadPool(numberOfRequests);
@@ -412,7 +412,7 @@ class ReservationConcurrencyTest {
     void differentUsersCanReserveDifferentSeatsConcurrently()
             throws Exception {
 
-        int numberOfRequests = 5;
+        int numberOfRequests = 100;
 
         ExecutorService executor =
                 Executors.newFixedThreadPool(numberOfRequests);
