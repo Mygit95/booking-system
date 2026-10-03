@@ -4,6 +4,28 @@ A concurrency-safe seat reservation service built with **Java 21, Spring Boot, P
 
 This project was developed as a backend engineering take-home exercise focused on reservation correctness under high concurrency, idempotency, per-user limits, deployment, and observability.
 
+## Live Deployment
+
+The service is deployed and publicly accessible at:
+
+```text
+https://booking-system-wlku.onrender.com
+```
+
+### Health Check
+
+```http
+GET https://booking-system-wlku.onrender.com/actuator/health
+```
+
+### API Base URL
+
+```text
+https://booking-system-wlku.onrender.com
+```
+
+The deployed service can be used to test the reservation APIs directly.
+
 ## Architecture
 
 ```text
@@ -419,7 +441,11 @@ UTC is explicitly configured for the JVM:
 
 ## Production Deployment
 
-The application can be deployed as a Docker service with PostgreSQL as a separate database service.
+The application is deployed at:
+
+```text
+https://booking-system-wlku.onrender.com
+```
 
 The production environment should provide:
 
