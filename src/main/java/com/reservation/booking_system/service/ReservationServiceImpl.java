@@ -124,6 +124,49 @@ public class ReservationServiceImpl
                         userId
                 );
 
+
+        /*
+         * Re-check idempotency after acquiring the
+         * user/show lock.
+         *
+         * Multiple concurrent requests may have passed
+         * the initial idempotency check before the first
+         * transaction committed its idempotency record.
+         *
+         * The user/show lock serializes them, so the
+         * second request can now see the committed
+         * idempotency record.
+         */
+        Optional<IdempotencyKey> existingAfterLock =
+                idempotencyKeyRepository
+                        .findByShowIdAndUserIdAndIdempotencyKey(
+                                showId,
+                                userId,
+                                request.idempotency_key()
+                        );
+
+        if (existingAfterLock.isPresent()) {
+
+            IdempotencyKey existingKey =
+                    existingAfterLock.get();
+
+            String requestHash =
+                    createRequestHash(requestedSeats);
+
+            if (!existingKey.getRequestHash()
+                    .equals(requestHash)) {
+
+                throw new ConflictException(
+                        "Idempotency key was already used with a different request",
+                        "IDEMPOTENCY_CONFLICT"
+                );
+            }
+
+            return toResponse(
+                    existingKey.getReservation()
+            );
+        }
+
         /*
          * STEP 6
          * Check the user's booking limit.
